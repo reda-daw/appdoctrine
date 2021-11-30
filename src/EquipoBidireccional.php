@@ -1,18 +1,17 @@
 <?php
 
-// src/Equipo.php
+// src/EquipoBidireccional.php
 
-use Doctrine\ORM\EntityRepository;
-
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="equipo")
- * @ORM\Entity(repositoryClass="EquipoRepository")
- */
 
-class Equipo
+/**
+ * @ORM\Entity @ORM\Table(name="equipo")
+ **/
+
+class EquipoBidireccional
+
 {
     /** @ORM\Id @ORM\Column(type="integer") @ORM\GeneratedValue **/
     private $id;
@@ -29,6 +28,22 @@ class Equipo
     /** @ORM\Column(type="string") **/
     private $ciudad;
 
+    /**
+     * Un equipo tiene muchos jugadores
+     * @ORM\OneToMany(targetEntity="JugadorBidireccional", mappedBy="equipo")
+     */
+    private $jugadores;
+
+    public function __construct()
+    {
+        $this->jugadores = new ArrayCollection();
+    }
+
+    public function getJugadores()
+    {
+        return $this->jugadores;
+    }
+
     public function getId()
     {
         return $this->id;
@@ -39,6 +54,7 @@ class Equipo
         return $this->nombre;
     }
 
+
     public function setNombre($nombre)
     {
         $this->nombre = $nombre;
@@ -48,6 +64,7 @@ class Equipo
     {
         return $this->fundacion;
     }
+
 
     public function setFundacion($fundacion)
     {
@@ -60,6 +77,7 @@ class Equipo
     }
 
     public function setSocios($socios)
+
     {
         $this->socios = $socios;
     }
@@ -74,26 +92,3 @@ class Equipo
         $this->ciudad = $ciudad;
     }
 }
-
-
-// class EquipoRepository extends EntityRepository
-
-// {   /*devuelve una colección con los jugadores del equipo, -1 si no encuentra el equipo*/
-
-//     public function getLista($nombre_equipo)
-
-//     {
-
-//         $equipo =  $this->getEntityManager()->getRepository('Equipo')->findOneBy(array('nombre' => $nombre_equipo));
-
-//         if (!$equipo) {
-
-//             return -1;
-//         } else {
-
-//             $query = $this->getEntityManager()->createQuery("SELECT j FROM jugador j JOIN j.equipo e WHERE e.nombre = '$nombre_equipo'");
-
-//             return $query->getResult();
-//         }
-//     }
-// }
